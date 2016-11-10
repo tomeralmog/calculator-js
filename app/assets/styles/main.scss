@@ -1,4 +1,11 @@
+@import "../../../bower_components/normalize-css/normalize.css";
 @import "mixins";
+@import "variables";
+@import "calculator";
+
+*{
+  box-sizing: border-box;
+}
 
 html, body {
   min-height:100%;
@@ -11,7 +18,11 @@ html, body {
 .page-wrapper{
   min-height: 100%;
   width: 100%;
+  @include background-gradient($bg-color, #FFF);
+  text-align: center;
 }
+
+
 
 .table{
   display: table;
@@ -25,11 +36,18 @@ html, body {
 }
 
 header{
-
+  padding: 1em;
+  color: #333;
 }
 
 
 footer{
+  width: 100%;
+  padding: 2em 0;
+
+  a{
+    color: $link-color;
+  }
 }
 
 @media screen and (min-width: 1200px) {

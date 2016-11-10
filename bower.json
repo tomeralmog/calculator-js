@@ -1,12 +1,6 @@
 {
-  "name": "kovel",
-  "private": true,
+  "name": "tomer almog calculator",
   "dependencies": {
-    "foundation-sites": "~6.2.0",
-    "wow": "~1.1.2"
-  },
-  "devDependencies": {
-    "chai": "~3.5.0",
-    "mocha": "~2.4.5"
+    "normalize-css": "normalize.css#^5.0.0"
   }
 }

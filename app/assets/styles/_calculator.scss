@@ -1,0 +1,145 @@
+.calc-wrapper{
+  position: relative;
+  border-radius: 1em;
+  @include background-gradient-radial(#f2f3f8, #c0c1c6);
+  width: 90%;
+  margin-left: 5%;
+  padding: 2em;
+  overflow: hidden;
+  @include box-shadow(1px, 0.5em, 1em, 0px, rgba(0,0,0,0.75));
+  @media screen and (min-width: 768px) {
+    width: 60%;
+    margin-left: 20%;
+  }
+  @media screen and (min-width: 1024px) {
+    width: 40%;
+    margin-left: 30%;
+  }
+
+  .left-border{
+    position: absolute;
+    top:0;
+    left:0;
+    width: 10px;
+    height: 100%;
+    //@include background-gradient(#babbc0, #828187);
+    background: rgb(130,129,135); /* Old browsers */
+    background: -moz-linear-gradient(left,  rgba(130,129,135,1) 0%, rgba(186,187,192,1) 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(left,  rgba(130,129,135,1) 0%,rgba(186,187,192,1) 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to right,  rgba(130,129,135,1) 0%,rgba(186,187,192,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#828187', endColorstr='#babbc0',GradientType=1 ); /* IE6-9 */
+  }
+
+  .right-border{
+    position: absolute;
+    top:0;
+    right:0;
+    width: 10px;
+    height: 100%;
+    background: rgb(186,187,192); /* Old browsers */
+    background: -moz-linear-gradient(left,  rgba(186,187,192,1) 0%, rgba(130,129,135,1) 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(left,  rgba(186,187,192,1) 0%,rgba(130,129,135,1) 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to right,  rgba(186,187,192,1) 0%,rgba(130,129,135,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#babbc0', endColorstr='#828187',GradientType=1 ); /* IE6-9 */
+  }
+  .bottom-border{
+    position: absolute;
+    bottom:0;
+    left:0;
+    width: 100%;
+    height: 10px;
+    @include background-gradient(#babbc0, #5e5d61);
+  }
+  .top-border{
+    position: absolute;
+    top:0;
+    left:0;
+    width: 100%;
+    height: 10px;
+    @include background-gradient-radial(#fafafc, #c2c1c6);
+  }
+
+  .screen-wrapper{
+    position: relative;
+    overflow: hidden;
+  }
+
+  .screen{
+    width: 100%;
+    background-color: #000;
+    padding: 1.5em;
+    border-radius: 0.4em 0.4em 0 0;
+  }
+  .screen-bottom{
+    width: 100%;
+    background-color: #000;
+    height: 20px;
+    border-radius: 0 0 50% 50%;
+  }
+
+  #calc-input{
+    width: 100%;
+    background-color: #afd05b;
+    font-size: 2em;
+    font-family: 'Orbitron', sans-serif;
+    padding: 0.2em 0.2em 0;
+    border-width:0px;
+    border:none;
+    border-radius: 0.1em;
+    &:focus{
+      outline: none;
+    }
+  }
+  .screen-gloss{
+    position: absolute;
+    width: 20em;
+    height:20em;
+    top:-11em;
+    left:-5em;
+    border-radius: 50%;
+    background-color: #FFF;
+    opacity: 0.2;
+    pointer-events: none;
+
+  }
+
+  .buttons-wrapper{
+    margin-top: 2em;
+    &:hover{
+      .button{
+        opacity:0.5;
+      }
+    }
+    .button{
+      float: left;
+      width: 19%;
+      width: calc(20% - 20px);
+      margin: 10px;
+      padding: 1rem;
+      color: #FFF;
+      border-radius: 4px;
+      cursor: pointer;
+      @include background-gradient(#575a63, #3c3d42);
+      @include box-shadow(-2px, -3px, 4px, 2px, rgba(0,0,0,0.75), true);
+      @include transition2(opacity 0.3s);
+      &:hover{
+        opacity: 1;
+      }
+      &:active{
+        opacity: 1;
+        @include box-shadow(1px, 1px, 4px, 2px, rgba(0,0,0,0.75), true);
+      }
+
+      &.large{
+        width: calc(40% - 20px);
+      }
+      &.operator{
+        @include background-gradient(#353434, #1a1a1a);
+      }
+
+      &.reset{
+        @include background-gradient(#f0842a, #e4540e);
+      }
+    }
+  }
+}
