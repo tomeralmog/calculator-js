@@ -1,0 +1,64 @@
+@import "mixins";
+
+html, body {
+  min-height:100%;
+  min-width: 320px;
+  font-family: 'Lato', sans-serif;
+  color: #333;
+  background-color: #FFF;
+}
+
+.page-wrapper{
+  min-height: 100%;
+  width: 100%;
+}
+
+.table{
+  display: table;
+  width: 100%;
+}
+
+.table-cell{
+  display: table-cell;
+  text-align: center;
+  vertical-align: middle;
+}
+
+header{
+
+}
+
+
+footer{
+}
+
+@media screen and (min-width: 1200px) {
+  body{
+    font-size: 110%;
+  }
+}
+
+
+@media screen and (min-width: 1600px) {
+  body {
+    font-size: 120%;
+  }
+}
+
+@media screen and (min-width: 2200px) {
+  body {
+    font-size: 140%;
+  }
+}
+
+@media screen and (min-width: 2800px) {
+  body {
+    font-size: 160%;
+  }
+}
+
+@media screen and (min-width: 3200px) {
+  body {
+    font-size: 170%;
+  }
+}

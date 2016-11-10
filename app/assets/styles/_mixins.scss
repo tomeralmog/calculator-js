@@ -1,0 +1,188 @@
+@mixin calc($property, $expression) {
+  #{$property}: calc(#{$expression});
+  #{$property}: -moz-calc(#{$expression});
+  #{$property}: -webkit-calc(#{$expression});
+}
+
+@mixin transition2($args) {
+  -webkit-transition: $args;
+  -moz-transition: $args;
+  -ms-transition: $args;
+  -o-transition: $args;
+  transition: $args;
+}
+
+@mixin background-size($size){
+	-webkit-background-size: $size;
+    -moz-background-size: $size;
+    -o-background-size: $size;
+    background-size: $size;
+}
+
+@mixin box-sizing($type){
+	-webkit-box-sizing: $type; /* Safari/Chrome, other WebKit */
+	-moz-box-sizing: $type;    /* Firefox, other Gecko */
+	box-sizing: $type;         /* Opera/IE 8+ */
+}
+
+@mixin transition($speed, $easing){
+	-webkit-transition:$speed $easing;
+	-moz-transition: $speed $easing;
+	-ms-transition: $speed $easing;
+	-o-transition: $speed $easing;
+	transition: $speed $easing;
+}
+
+@mixin opacity($opacity) {
+  opacity: $opacity;
+  -moz-opacity: $opacity;
+  -khtml-opacity: $opacity;
+  $opacity-ie: $opacity * 100;
+  filter: alpha(opacity=#{$opacity-ie});
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=#{$opacity-ie})";
+}
+
+@mixin css3($property, $value) {
+     @each $prefix in -webkit-, -moz-, -ms-, -o-, '' {
+          #{$prefix}#{$property}: $value;
+     }
+}
+@mixin border-radius($radius) {
+  @include css3(border-radius,$radius);
+  background-clip: padding-box;  /* stops bg color from leaking outside the border: */
+}
+
+@mixin rotate($deg){
+	transform:rotate($deg);
+	-ms-transform:rotate($deg); /* IE 9 */
+	-webkit-transform:rotate($deg); /* Opera, Chrome, and Safari */
+}
+
+@mixin scale($size){
+  -webkit-transform: scale($size, $size);
+   -moz-transform: scale($size, $size);
+   -ms-transform: scale($size, $size);
+   -o-transform: scale($size, $size);
+   transform: scale($size, $size)
+}
+
+@mixin abs-position ($top: auto, $right: auto, $bottom: auto, $left: auto) {
+     position: absolute;
+     top: $top;
+     right: $right;
+     bottom: $bottom;
+     left: $left;
+}
+
+@mixin box-shadow($hShadow, $vShadow, $blur, $spread, $color, $inset: false) {
+ @if $inset {
+  -webkit-box-shadow: $hShadow $vShadow $blur $spread $color inset;
+  -moz-box-shadow: $hShadow $vShadow $blur $spread $color inset;
+  box-shadow: $hShadow $vShadow $blur $spread $color inset;
+ } @else {
+  -webkit-box-shadow: $hShadow $vShadow $blur $spread $color;
+  -moz-box-shadow: $hShadow $vShadow $blur $spread $color;
+  box-shadow: $hShadow $vShadow $blur $spread $color;
+ }
+}
+
+@mixin box-sizing($box-model) {
+  -webkit-box-sizing: $box-model; // Safari <= 5
+     -moz-box-sizing: $box-model; // Firefox <= 19
+          box-sizing: $box-model;
+}
+
+@mixin background-gradient($from, $to){
+    $ie-hex-from: ie-hex-str($from);
+    $ie-hex-to:   ie-hex-str($to);
+
+	background: $from; /* Old browsers */
+	/* IE9 SVG, needs conditional override of 'filter' to 'none' */
+	background: -moz-linear-gradient(top,  $from 0%, $to 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,$from), color-stop(100%,$to)); /* Chrome,Safari4+ */
+	background: -o-linear-gradient(top,  $from 0%,$to 100%); /* Opera 1$size0+ */
+	background: -ms-linear-gradient(top,  $from 0%,$to 100%); /* IE10+ */
+    background: -webkit-linear-gradient(top,  $from 0%,$to 100%); /* Chrome10+,Safari5.1+ */
+	background: linear-gradient(to bottom,  $from 0%,$to 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#{$ie-hex-from}', endColorstr='#{$ie-hex-to}',GradientType=0 ); /* IE6-8 */
+}
+
+@mixin webkit-text-gradient($from, $to) {
+  background: -webkit-linear-gradient(top, #ffffff 0%,#6f6f6f 100%); /* Chrome10+,Safari5.1+ */
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+@mixin background-gradient-radial($center, $outside){
+  $ie-hex-center: ie-hex-str($center);
+  $ie-hex-outside: ie-hex-str($outside);
+
+  background: $outside; /* Old browsers */
+  background: -moz-radial-gradient(center, ellipse cover,  $center 0%, $outside 100%); /* FF3.6+ */
+  background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%,$center), color-stop(100%,$outside), color-stop(100%,#207cca)); /* Chrome,Safari4+ */
+  background: -webkit-radial-gradient(center, ellipse cover,  $center 0%,$outside 100%); /* Chrome10+,Safari5.1+ */
+  background: -o-radial-gradient(center, ellipse cover,  $center 0%,$outside 100%); /* Opera 12+ */
+  background: -ms-radial-gradient(center, ellipse cover,  $center 0%,$outside 100%); /* IE10+ */
+  background: radial-gradient(ellipse at center,  $center 0%,$outside 100%); /* W3C */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#{$ie-hex-center}', endColorstr='#{$ie-hex-outside}',GradientType=1 ); /* IE6-8 fallback on horizontal gradient */
+}
+
+//Quickly center any element within its parent. Requires width or max-width to be set.
+@mixin center-block {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+// Easily vertically align the child of the div this is mixed into.
+// NOTE: The div this is applied to must have a height that is greater than its contents.
+@mixin valign {
+  display: table;
+
+  > * {
+    vertical-align: middle;
+    display: table-cell;
+    float: none !important;
+  }
+}
+
+
+
+// keyframes mixin
+@mixin keyframes($name) {
+  @-webkit-keyframes #{$name} {
+    @content;
+  }
+  @-moz-keyframes #{$name} {
+    @content;
+  }
+  @-ms-keyframes #{$name} {
+    @content;
+  }
+  @keyframes #{$name} {
+    @content;
+  }
+}
+
+@mixin animation ($delay, $duration, $animation) {
+    -webkit-animation-delay: $delay;
+    -webkit-animation-duration: $duration;
+    -webkit-animation-name: $animation;
+    -webkit-animation-fill-mode: forwards; /* this prevents the animation from restarting! */
+
+    -moz-animation-delay: $delay;
+    -moz-animation-duration: $duration;
+    -moz-animation-name: $animation;
+    -moz-animation-fill-mode: forwards; /* this prevents the animation from restarting! */
+
+    -o-animation-delay: $delay;
+    -o-animation-duration: $duration;
+    -o-animation-name: $animation;
+    -o-animation-fill-mode: forwards; /* this prevents the animation from restarting! */
+
+    animation-delay: $delay;
+    animation-duration: $duration;
+    animation-name: $animation;
+    animation-fill-mode: forwards; /* this prevents the animation from restarting! */
+}
+
