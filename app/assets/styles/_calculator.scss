@@ -131,7 +131,7 @@
       }
 
       &.large{
-        width: calc(40% - 20px);
+        width: calc(60% - 20px);
       }
       &.operator{
         @include background-gradient(#353434, #1a1a1a);
