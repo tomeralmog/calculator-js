@@ -18,7 +18,7 @@ I used grunt to automate dev process, minify the code and compile scss into css.
 
 ### Installation
 
-Download and extract the [latest pre-built release](https://github.com/tomeralmog/calculator-js).
+Download and extract the [repo](https://github.com/tomeralmog/calculator-js).
 
 Install the dependencies and devDependencies.
 
