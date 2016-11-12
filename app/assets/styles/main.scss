@@ -13,12 +13,16 @@ html, body {
   font-family: 'Lato', sans-serif;
   color: #333;
   background-color: #FFF;
+  @include background-gradient($bg-color, #FFF);
 }
 
 .page-wrapper{
   min-height: 100%;
   width: 100%;
-  @include background-gradient($bg-color, #FFF);
+  //@include background-gradient($bg-color, #FFF);
+  background: url("../images/logo-eyeo.png") center center no-repeat;
+  @include background-size(contain);
+
   text-align: center;
 }
 
@@ -38,10 +42,12 @@ html, body {
 header{
   padding: 1em;
   color: #333;
+  text-shadow: 0 0 8px #FFF;
 }
 
 
 footer{
+  text-shadow: 1px 1px 3px rgba(0,0,0,0.8);
   width: 100%;
   padding: 2em 0;
 
