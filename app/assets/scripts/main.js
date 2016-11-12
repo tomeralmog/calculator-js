@@ -28,6 +28,7 @@
   function Calculator(screen, buttons){
     this.screen = screen;
     this.buttons = buttons;
+    this.blockActions = false;
 
     this.reset();
     this.bindEvents();
@@ -46,15 +47,28 @@
   };
 
   Calculator.prototype.onButtonPressed = function (e) {
-    if(!e.srcElement){
+    if(!e.srcElement || this.blockActions){
       return;
     }
+
+    this.blockActions = true;
     var numCharacter = e.srcElement.innerText;
-    if(!isNaN(parseInt(numCharacter))){
+    if(numCharacter.length > 1){
+      this.blockActions = false;
+      return;
+    }
+
+    if(!isNaN(parseInt(numCharacter)) || numCharacter === '.'){
       this.inputNumber(numCharacter);
     } else {
-      this.inputOperator(numCharacter);
+      console.log(numCharacter, numCharacter.length);
+
+      if(numCharacter.length === 1) {
+        this.inputOperator(numCharacter);
+      }
     }
+    this.blockActions = false;
+
   };
 
   Calculator.prototype.onKeyPressed = function (e) {
@@ -62,12 +76,15 @@
   };
 
   Calculator.prototype.inputNumber = function (numCharacter) {
-    if(this.operation === '' || this.textResult.slice(-1) === '.') {
+    if( this.textResult.slice(-1) === '.' && numCharacter=== '.'){
+      return;
+    }
+    if(this.operation === '') {
       this.textResult += numCharacter;
+      if (this.textResult === '.'){ this.textResult = '0.'}
       this.result = parseFloat(this.textResult);
       this.screen.value = this.textResult;
     } else {
-      this.textResult = '';
       this.textResult += numCharacter;
       this.screen.value = this.textResult;
     }
@@ -79,53 +96,61 @@
     } else {
       if(this.operation === '') {
         this.operation = operator;
-        if(operator === '.'){
-          this.calculatePrevOperation(operator);
-        }
-
-      } else {
+        this.textResult = '';
+      } else if(this.textResult !== '' ){
         this.calculatePrevOperation(operator);
       }
     }
   };
 
   Calculator.prototype.calculatePrevOperation = function (nextOperator) {
-    if(nextOperator === '.') {
-      if(this.textResult.slice(-1) !== '.') {
-        this.textResult += '.';
-        this.screen.value = this.textResult;
-      }
-    } else {
-      switch (this.operation) {
-        case '+':
-          this.result += parseInt(this.textResult);
+
+    switch (this.operation) {
+      case '+':
+        this.result += parseFloat(this.textResult);
+        break;
+      case '-':
+        this.result -= parseFloat(this.textResult);
+        break;
+      case 'x':
+        this.result *= parseFloat(this.textResult);
+        break;
+      case '^':
+        this.result = Math.pow(this.result, parseFloat(this.textResult));
+        break;
+      case '÷':
+        if (parseFloat(this.textResult) === 0) {
+          this.showError('Error: Can\'t divide by 0');
+          return;
+        } else {
+          this.result /= parseFloat(this.textResult);
           break;
-        case '-':
-          this.result -= parseInt(this.textResult);
-          break;
-        case 'x':
-          this.result *= parseInt(this.textResult);
-          break;
-        case '÷':
-          if (parseInt(this.textResult) === 0) {
-            this.screen.value = 'Error: Can\'t divide by 0';
-            return;
-          } else {
-            this.result /= parseInt(this.textResult);
-            break;
-          }
+        }
 
 
-      }
-      console.log('here?', this.operation)
-      this.screen.value = this.result;
-      if (nextOperator === '=') {
-        this.operation = '';
-        this.textResult = '';
-      } else {
-        this.operation = nextOperator;
-      }
     }
+
+    this.textResult = '';
+    console.log('here?', this.operation);
+    this.screen.value = this.result;
+    if (nextOperator === '=') {
+      this.operation = '';
+    } else {
+      this.operation = nextOperator;
+    }
+
+  };
+
+  Calculator.prototype.showError = function (errorMsg) {
+    this.screen.value = errorMsg;
+    this.screen.className = 'error';
+    this.blockActions = true;
+    var self = this;
+    setTimeout(function(){
+      self.reset();
+      self.screen.className = '';
+      self.blockActions = false;
+    }, 2000);
   };
 
 
