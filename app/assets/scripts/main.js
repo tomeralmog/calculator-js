@@ -1,4 +1,5 @@
 (function () {
+  'use strict';
   var settings = {
     screen: $('calc-input'),
     buttons: $('buttons')
@@ -10,7 +11,7 @@
   }
 
   function bindEventListener(target, type, listener) {
-    if(window.addEventListener){
+    if (window.addEventListener) {
       $(target).addEventListener(type, listener);
     } else {
       $(target).attachEvent('on' + type, listener);
@@ -21,11 +22,11 @@
   function bind(context, callback) {
     var self = context;
     return function (event) {
-        return callback.call(self, event);
+      return callback.call(self, event);
     };
   }
 
-  function Calculator(screen, buttons){
+  function Calculator(screen, buttons) {
     this.screen = screen;
     this.buttons = buttons;
     this.blockActions = false;
@@ -35,38 +36,36 @@
   }
 
   Calculator.prototype = {
-    constructor : Calculator,
+    constructor: Calculator,
 
-    reset : function () {
+    reset: function () {
       this.result = 0;
       this.textResult = '';
       this.operation = '';
       this.screen.value = '0';
     },
 
-    bindEvents : function () {
+    bindEvents: function () {
       bindEventListener(this.buttons, 'click', bind(this, this.onButtonPressed));
       bindEventListener(window, 'keypress', bind(this, this.onKeyPressed));
     },
 
-    onButtonPressed : function (e) {
-      if(!e.srcElement || this.blockActions){
+    onButtonPressed: function (e) {
+      if (!e.srcElement || this.blockActions) {
         return;
       }
 
       this.blockActions = true;
       var numCharacter = e.srcElement.innerText;
-      if(numCharacter.length > 1){
+      if (numCharacter.length > 1) {
         this.blockActions = false;
         return;
       }
 
-      if(!isNaN(parseInt(numCharacter)) || numCharacter === '.'){
+      if (!isNaN(parseInt(numCharacter)) || numCharacter === '.') {
         this.inputNumber(numCharacter);
       } else {
-        console.log(numCharacter, numCharacter.length);
-
-        if(numCharacter.length === 1) {
+        if (numCharacter.length === 1) {
           this.inputOperator(numCharacter);
         }
       }
@@ -74,42 +73,19 @@
 
     },
 
-    onButtonPressed : function (e) {
-      if(!e.srcElement || this.blockActions){
-        return;
-      }
-
-      this.blockActions = true;
-      var numCharacter = e.srcElement.innerText;
-      if(numCharacter.length > 1){
-        this.blockActions = false;
-        return;
-      }
-
-      if(!isNaN(parseInt(numCharacter)) || numCharacter === '.'){
-        this.inputNumber(numCharacter);
-      } else {
-        console.log(numCharacter, numCharacter.length);
-
-        if(numCharacter.length === 1) {
-          this.inputOperator(numCharacter);
-        }
-      }
-      this.blockActions = false;
-
+    onKeyPressed: function (e) {
+     // console.log(e)
     },
 
-    onKeyPressed : function (e) {
-      console.log(e)
-    },
-
-    inputNumber : function (numCharacter) {
-      if( this.textResult.slice(-1) === '.' && numCharacter=== '.'){
+    inputNumber: function (numCharacter) {
+      if (this.textResult.slice(-1) === '.' && numCharacter === '.') {
         return;
       }
-      if(this.operation === '') {
+      if (this.operation === '') {
         this.textResult += numCharacter;
-        if (this.textResult === '.'){ this.textResult = '0.'}
+        if (this.textResult === '.') {
+          this.textResult = '0.'
+        }
         this.result = parseFloat(this.textResult);
         this.screen.value = this.textResult;
       } else {
@@ -118,73 +94,45 @@
       }
     },
 
-    inputOperator : function (operator) {
+    inputOperator: function (operator) {
       if (operator === 'C') {
         this.reset();
       } else {
-        if(this.operation === '') {
+        if (this.operation === '') {
           this.operation = operator;
           this.textResult = '';
-        } else if(this.textResult !== '' ){
+        } else if (this.textResult !== '') {
           this.calculatePrevOperation(operator);
         }
       }
     },
 
-    inputNumber : function (numCharacter) {
-      if( this.textResult.slice(-1) === '.' && numCharacter=== '.'){
-        return;
-      }
-      if(this.operation === '') {
-        this.textResult += numCharacter;
-        if (this.textResult === '.'){ this.textResult = '0.'}
-        this.result = parseFloat(this.textResult);
-        this.screen.value = this.textResult;
-      } else {
-        this.textResult += numCharacter;
-        this.screen.value = this.textResult;
-      }
-    },
-
-    inputOperator : function (operator) {
-      if (operator === 'C') {
-        this.reset();
-      } else {
-        if(this.operation === '') {
-          this.operation = operator;
-          this.textResult = '';
-        } else if(this.textResult !== '' ){
-          this.calculatePrevOperation(operator);
-        }
-      }
-    },
-
-    calculatePrevOperation : function (nextOperator) {
+    calculatePrevOperation: function (nextOperator) {
       switch (this.operation) {
-        case '+':
-          this.result += parseFloat(this.textResult);
+
+      case '+':
+        this.result += parseFloat(this.textResult);
+        break;
+      case '-':
+        this.result -= parseFloat(this.textResult);
+        break;
+      case 'x':
+        this.result *= parseFloat(this.textResult);
+        break;
+      case '^':
+        this.result = Math.pow(this.result, parseFloat(this.textResult));
+        break;
+      case '÷':
+        if (parseFloat(this.textResult) === 0) {
+          this.showError('Error: Can\'t divide by 0');
+          return;
+        } else {
+          this.result /= parseFloat(this.textResult);
           break;
-        case '-':
-          this.result -= parseFloat(this.textResult);
-          break;
-        case 'x':
-          this.result *= parseFloat(this.textResult);
-          break;
-        case '^':
-          this.result = Math.pow(this.result, parseFloat(this.textResult));
-          break;
-        case '÷':
-          if (parseFloat(this.textResult) === 0) {
-            this.showError('Error: Can\'t divide by 0');
-            return;
-          } else {
-            this.result /= parseFloat(this.textResult);
-            break;
-          }
+        }
       }
 
       this.textResult = '';
-      console.log('here?', this.operation);
       this.screen.value = this.result;
       if (nextOperator === '=') {
         this.operation = '';
@@ -193,12 +141,12 @@
       }
     },
 
-    showError : function(errorMsg) {
+    showError: function (errorMsg) {
       this.screen.value = errorMsg;
       this.screen.className = 'error';
       this.blockActions = true;
       var self = this;
-      setTimeout(function(){
+      setTimeout(function () {
         self.reset();
         self.screen.className = '';
         self.blockActions = false;

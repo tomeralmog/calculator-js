@@ -382,6 +382,7 @@ module.exports = function (grunt) {
       'clean:server',
       'wiredep',
       'concurrent:server',
+      //'eslint',
       'postcss',
       'browserSync:livereload',
       'watch'
@@ -419,7 +420,7 @@ module.exports = function (grunt) {
     'uglify',
     'copy:dist',
     //'filerev',
-    'usemin',
+    'usemin'
     //'htmlmin'
   ]);
 
