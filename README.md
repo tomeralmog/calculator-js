@@ -18,8 +18,6 @@ I used grunt to automate dev process, minify the code and compile scss into css.
 
 ### Installation
 
-Dillinger requires [Node.js](https://nodejs.org/) v4+ to run.
-
 Download and extract the [latest pre-built release](https://github.com/tomeralmog/calculator-js).
 
 Install the dependencies and devDependencies.
