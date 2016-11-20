@@ -3,7 +3,8 @@
   var settings = {
     screen: $('calc-input'),
     buttons: $('buttons'),
-    errorMsg: 'Error: Can\'t divide by 0'
+    errorMsg: 'Error: Can\'t divide by 0',
+    errorTime: 2000
   };
   var s = settings;
 
@@ -29,7 +30,17 @@
     };
   }
 
-  // main object
+
+
+  /***
+   * Object Calculator
+   *
+   * Calculator implementation, main object
+   * has no public methods.
+   *
+   * @param screen - Screen object that implements show and error
+   * @param buttons - DOM element that contains the buttons of the calcualtor
+   */
   function Calculator(screen, buttons) {
     this.screen = screen;
     this.buttons = buttons;
@@ -79,7 +90,7 @@
         this.parseInput('=');
       } else {
         var ch = String.fromCharCode(e.charCode).toUpperCase();
-        if ("0123456789.+-*/^=C".indexOf(ch) >= 0) {
+        if ("0123456789.+-*/^=CX".indexOf(ch) >= 0) {
           this.parseInput(ch);
         }
       }
@@ -136,7 +147,8 @@
       case '-':
         this.result -= parseFloat(this.textResult);
         break;
-      case 'x':
+      case '*':
+      case 'X':
         this.result *= parseFloat(this.textResult);
         break;
       case '^':
@@ -163,22 +175,70 @@
     },
 
     displayValue: function(val){
-      this.screen.value = val;
+      this.screen.show(val);
     },
 
     showError: function (errorMsg) {
-      this.displayValue(errorMsg);
-      this.screen.className = 'error';
       this.blockActions = true;
       var self = this;
-      setTimeout(function () {
+      this.screen.error(errorMsg).then(function() {
         self.reset();
-        self.screen.className = '';
         self.blockActions = false;
-      }, 2000);
+      });
     }
 
   };
 
-  var calculator = new Calculator(s.screen, s.buttons);
+  /***
+   * Object Screen
+   *
+   * Displays messages on a DOM element
+   * has two public methods: show and error
+   *
+   * @param screenElement - DOM element to display messages on
+   * @param errorTime - time in milliseconds to display error
+   */
+  function Screen(screenElement, errorTime){
+
+    this.screenElement = screenElement;
+    this.errorTime = errorTime;
+
+    /***
+     * function show
+     * display a string or number on the screenElement
+     *
+     * @param val: string or number
+     */
+    this.show =  function(val){
+      if(typeof val === 'string' || typeof val === 'number') {
+        this.screenElement.value = val;
+      }
+    };
+
+
+    /***
+     * display an error message for errorTime millisecond.
+     * appends error class to the screenElement and returns a promise
+     * that resolves when the screen is back to regular display
+     *
+     * @param errorMsg: string
+     * @returns {Promise}
+     */
+    this.error = function (errorMsg) {
+      var self = this;
+      return new Promise(function (resolve, reject) {
+        self.show(errorMsg);
+        self.screenElement.className = 'error';
+
+        setTimeout(function () {
+          self.screenElement.className = '';
+          resolve();
+        }, self.errorTime);
+      });
+
+    };
+  }
+
+  var screen = new Screen(s.screen, s.errorTime);
+  var calculator = new Calculator(screen, s.buttons);
 })();
