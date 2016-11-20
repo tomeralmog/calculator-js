@@ -41,13 +41,11 @@
    * @param screen - Screen object that implements show and error
    * @param buttons - DOM element that contains the buttons of the calcualtor
    */
-  function Calculator(screen, buttons) {
+  function Calculator(screen, inputCapture) {
     this.screen = screen;
-    this.buttons = buttons;
-    this.blockActions = false;
-
+    this.inputCapture = inputCapture;
+    this.inputCapture.setInputHandler(this.parseInput, this);
     this.reset();
-    this.bindEvents();
   }
 
   Calculator.prototype = {
@@ -58,50 +56,17 @@
       this.result = 0;
       this.textResult = '';
       this.operation = '';
-      this.displayValue('0');
+      this.screen.show('0');
     },
 
-    bindEvents: function () {
-      bindEventListener(this.buttons, 'click', bind(this, this.onButtonPressed));
-      bindEventListener(window, 'keypress', bind(this, this.onKeyPressed));
-    },
 
-    onButtonPressed: function (e) {
-      if (!e.srcElement || this.blockActions) {
-        return;
-      }
-      this.blockActions = true;
-      var inputCharacter = e.srcElement.innerText;
-      if (inputCharacter.length > 1) {
-        // clicking quickly returns longer string sometimes.
-        this.blockActions = false;
-        return;
-      }
 
-      this.parseInput(inputCharacter);
-      this.blockActions = false;
-
-    },
-
-    onKeyPressed: function (e) {
-      // enter should function like equal operator
-      if(e.charCode == 13 || e.keyCode === 13||
-        e.code === 'Enter'|| e.keyIdentifier  === 'Enter' ){
-        this.parseInput('=');
-      } else {
-        var ch = String.fromCharCode(e.charCode).toUpperCase();
-        if ("0123456789.+-*/^=CX".indexOf(ch) >= 0) {
-          this.parseInput(ch);
-        }
-      }
-    },
-
-    parseInput: function(input){
+    parseInput: function(input, context){
       // separate numbers and operators. decimal point is treated as a number
       if (!isNaN(parseInt(input)) || input === '.') {
-        this.inputNumber(input);
+        context.inputNumber(input);
       } else {
-        this.inputOperator(input);
+        context.inputOperator(input);
       }
     },
 
@@ -118,10 +83,10 @@
         }
         //convert string value to a float value
         this.result = parseFloat(this.textResult);
-        this.displayValue(this.textResult);
+        this.screen.show(this.textResult);
       } else {
         this.textResult += numCharacter;
-        this.displayValue(this.textResult);
+        this.screen.show(this.textResult);
       }
     },
 
@@ -166,7 +131,7 @@
       }
 
       this.textResult = '';
-      this.displayValue(this.result);
+      this.screen.show(this.result);
       if (nextOperator === '=') {
         this.operation = '';
       } else {
@@ -174,16 +139,10 @@
       }
     },
 
-    displayValue: function(val){
-      this.screen.show(val);
-    },
-
     showError: function (errorMsg) {
-      this.blockActions = true;
       var self = this;
       this.screen.error(errorMsg).then(function() {
         self.reset();
-        self.blockActions = false;
       });
     }
 
@@ -239,6 +198,79 @@
     };
   }
 
+
+  /***
+   * InputCapture Object
+   * Captures clicks on DOM element on keyboard on screen
+   * and calls a callback to handle the input
+   *
+   * @param buttonsElement - a DOM element in which clicks will be captured
+   */
+  function InputCapture(buttonsElement){
+    this.buttons = buttonsElement;
+    this.blockActions = false;
+    this.bindEvents();
+
+    /***
+     * setInputHandler
+     * after an input is being capture this function will be called.
+     */
+    this.setInputHandler = function(handler, context){
+      this.inputHandler = handler;
+      this.callbackContext = context;
+    };
+
+  }
+
+  InputCapture.prototype = {
+    // define all private functions here
+    constructor: InputCapture,
+
+    bindEvents: function () {
+      bindEventListener(this.buttons, 'click', bind(this, this.onButtonPressed));
+      bindEventListener(window, 'keypress', bind(this, this.onKeyPressed));
+    },
+
+    onButtonPressed: function (e) {
+      if (!e.srcElement || this.blockActions) {
+        return;
+      }
+      this.blockActions = true;
+      var inputCharacter = e.srcElement.innerText;
+      if (inputCharacter.length > 1) {
+        // clicking quickly returns longer string sometimes.
+        this.blockActions = false;
+        return;
+      }
+      if(this.inputHandler){
+        this.inputHandler(inputCharacter, this.callbackContext);
+      }
+      this.blockActions = false;
+
+    },
+
+    onKeyPressed: function (e) {
+      if (this.blockActions) {
+        return;
+      }
+      // enter should function like equal operator
+      if (e.charCode == 13 || e.keyCode === 13 ||
+        e.code === 'Enter' || e.keyIdentifier === 'Enter') {
+        if(this.inputHandler){
+          this.inputHandler('=', this.callbackContext);
+        }
+      } else {
+        var ch = String.fromCharCode(e.charCode).toUpperCase();
+        if ("0123456789.+-*/^=CX".indexOf(ch) >= 0) {
+          if(this.inputHandler){
+            this.inputHandler(ch, this.callbackContext);
+          }
+        }
+      }
+    }
+  };
+
   var screen = new Screen(s.screen, s.errorTime);
-  var calculator = new Calculator(screen, s.buttons);
+  var inputCapture = new InputCapture(s.buttons);
+  new Calculator(screen, inputCapture);
 })();
