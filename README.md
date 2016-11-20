@@ -2,7 +2,7 @@
 
 [![N|Solid](http://tomeralmog.com/themes/tomer/images/baloon-girl.png)](http://dev.tomeralmog.com/calculator/)
 
-An object oriented implementation of a simple calculator using JavaScript.
+An object oriented implementation of a simple calculator using JavaScript. You can use the calculator via keyboard or clicking the buttons.
 
 ## [Click for live example](http://dev.tomeralmog.com/calculator/)
 
