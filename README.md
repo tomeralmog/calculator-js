@@ -10,7 +10,7 @@ An object oriented implementation of a simple calculator using JavaScript.
 In this project I focused on
 * Design - simple UX, all css (no images)
 * Object Oriented Architecture - Calculator is an object with private methods
-* Easy to maintain - setting object, separation of concerns.
+* Easy to maintain - Separation of concerns: object for display, object for capturing the input, object for the calculator itself and a setting object to control the global settings.
 
 ### Tech
 
