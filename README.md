@@ -1,6 +1,6 @@
 # Javascript Calculator
 
-[![N|Solid](http://tomeralmog.com/themes/tomer/images/baloon-girl.png)](http://dev.tomeralmog.com/calculator/)
+[![N|Solid](http://dev.tomeralmog.com/calculator/assets/images/calc.png)](http://dev.tomeralmog.com/calculator/)
 
 An object oriented implementation of a simple calculator using JavaScript. You can use the calculator via keyboard or clicking the buttons.
 
